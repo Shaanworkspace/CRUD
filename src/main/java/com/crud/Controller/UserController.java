@@ -9,7 +9,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-
     private final UserService userService;
     public UserController(UserService userService){
         this.userService=userService;
@@ -19,8 +18,6 @@ public class UserController {
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
-
-
 
     // Create a user
     @PostMapping
@@ -44,9 +41,16 @@ public class UserController {
         }
     }
 
-
-
-
+    // Update a user
+    @PutMapping("/update/{id}")
+    public ResponseEntity<User> updateUsers(@PathVariable Long id, @RequestBody User userDetails) {
+        try {
+            User updatedUser = userService.updateUser(id, userDetails);
+            return ResponseEntity.ok(updatedUser);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 
     // Update a user
     @PutMapping("/name/{id}")
@@ -58,6 +62,9 @@ public class UserController {
             return ResponseEntity.badRequest().body(null);
         }
     }
+
+
+
     // Update a user
     @PutMapping("/email/{id}")
     public ResponseEntity<User> updateUsersEmail(@PathVariable Long id, @RequestBody User userDetails) {
