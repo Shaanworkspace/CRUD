@@ -1,35 +1,44 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import UserForm from './components/UserForm';
+import UserList from './components/UserList';
+import UpdateModal from './components/UpdateModal';
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [users, setUsers] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1 className="bg-aqua-50">Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    return (
+        <div className="bg-gray-100 font-sans min-h-screen">
+            {/* Header */}
+            <header className="bg-blue-600 text-white p-4 shadow-md">
+                <div className="container mx-auto">
+                    <h1 className="text-3xl font-bold text-shadow-lg">User Management System</h1>
+                    <nav className="mt-2">
+                        <a href="/" className="text-white hover:underline">Home</a>
+                    </nav>
+                </div>
+            </header>
+
+            {/* Main Content */}
+            <div className="container mx-auto p-6">
+                <UserForm setUsers={setUsers} />
+                <UserList
+                    users={users}
+                    setUsers={setUsers}
+                    setCurrentUser={setCurrentUser}
+                    setIsModalOpen={setIsModalOpen}
+                />
+                {isModalOpen && (
+                    <UpdateModal
+                        user={currentUser}
+                        setUsers={setUsers}
+                        setIsModalOpen={setIsModalOpen}
+                    />
+                )}
+            </div>
+        </div>
+    );
 }
 
-export default App
+export default App;
