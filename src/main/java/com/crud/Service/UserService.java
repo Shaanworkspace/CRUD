@@ -12,21 +12,27 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-
 public class UserService {
-
-
     private final UserRepository userRepository;
     @Autowired
     public UserService(UserRepository userRepository){
         this.userRepository=userRepository;
     }
-    private User user;
+
+
     public User createUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
         return userRepository.save(user);
+    }
+    public List<User> createAllUser(List<User> user) {
+        for(User u:user){
+            if (userRepository.existsByEmail(u.getEmail())) {
+                throw new IllegalArgumentException("Any or All the , Email already exists");
+            }
+        }
+        return userRepository.saveAll(user);
     }
 
 
@@ -47,11 +53,30 @@ public class UserService {
         if (!user.getEmail().equals(inputUser.getEmail()) && userRepository.existsByEmail(inputUser.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
-
         user.setName(inputUser.getName());
         user.setEmail(inputUser.getEmail());
         user.setAddress(inputUser.getAddress());
         user.setNumber(inputUser.getNumber());
+        return userRepository.save(user);
+    }
+
+
+    public User updateName(Long id, User inputUser) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
+        System.out.println("Old Email: " + user.getEmail());
+        System.out.println("Input Email: " + inputUser.getEmail());
+        if (!user.getEmail().equals(inputUser.getEmail()) && userRepository.existsByEmail(inputUser.getEmail())) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+        user.setName(inputUser.getName());
+        return userRepository.save(user);
+    }
+
+    public User updateEmail(Long id, User inputUser) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
+        user.setEmail(inputUser.getEmail());
         return userRepository.save(user);
     }
 
